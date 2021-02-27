@@ -1,6 +1,7 @@
 {
   "hosting": {
-    "public": "y",
+    "site": "vthacks2021",
+    "public": "static",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -9,7 +10,10 @@
     "rewrites": [
       {
         "source": "**",
-        "destination": "/index.html"
+        "run": {
+          "serviceId": "backend",
+          "region": "northamerica-northeast1"
+        }
       }
     ]
   }
