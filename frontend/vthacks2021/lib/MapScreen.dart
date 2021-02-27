@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapScreen extends StatefulWidget {
   MapScreen({Key key}) : super(key: key);
@@ -9,17 +10,30 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreen extends State<MapScreen> {
-  @override
-  void initState() {}
+  GoogleMapController mapController;
 
-  _MapScreen() {}
+  final LatLng _center = const LatLng(45.521563, -122.677433);
+
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: new Padding(
-            padding: const EdgeInsets.all(50.0), child: Text("Map Screen")
-        )
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Maps Sample App'),
+          backgroundColor: Colors.green[700],
+        ),
+        body: GoogleMap(
+          onMapCreated: _onMapCreated,
+          initialCameraPosition: CameraPosition(
+            target: _center,
+            zoom: 11.0,
+          ),
+        ),
+      ),
     );
   }
 }

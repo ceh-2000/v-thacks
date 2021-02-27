@@ -39,3 +39,6 @@ app.*.symbols
 
 # Obfuscation related
 app.*.map.json
+
+ios/Runner/AppDelegate.swift
+app/src/main/AndroidManifest.xml

@@ -12,13 +12,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-          title: 'Follow the Money',
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            primarySwatch: Colors.indigo,
-          ),
-          home: Navigation(title: 'Follow the Money'),
-        );
+      title: 'Follow the Money',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.indigo,
+      ),
+      home: Navigation(title: 'Follow the Money'),
+    );
   }
 }
 
@@ -33,16 +33,8 @@ class Navigation extends StatefulWidget {
 class _Navigation extends State<Navigation> {
   List num_screens = [0, 1, 2];
 
-  List all_screens = [
-    Camera(),
-    Photo(),
-    MapScreen()
-  ];
-  List all_screen_names = [
-    'Camera',
-    'Photo',
-    'Map Screen'
-  ];
+  List all_screens = [Camera(), Photo(), MapScreen()];
+  List all_screen_names = ['Camera', 'Photo', 'Map Screen'];
 
   Widget getScreenButtons(int i) {
     return OutlineButton(
