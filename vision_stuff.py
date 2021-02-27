@@ -1,3 +1,7 @@
+#STUFF:
+#  -Use folium for building interactive maps and outputting HTML
+#  -Use edit distance to compare new serial nums to ones in firebase... more permissive to make it more consistent!
+
 import requests
 # from nltk.corpus import words
 
