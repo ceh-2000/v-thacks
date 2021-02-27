@@ -4,6 +4,7 @@
 # To update the deployed server, run the following:
 # gcloud builds submit --tag gcr.io/vthacks2021/backend
 # gcloud beta run deploy --image gcr.io/vthacks2021/backend
+# firebase deploy
 
 from flask import Flask, render_template, make_response
 import os
@@ -32,7 +33,6 @@ db = firestore.client()
 
 #Bulding the Flask API
 app = FlaskAPI(__name__)
-
 
 # Example request: {"url" : "https://firebasestorage.googleapis.com/v0/b/vthacks2021.appspot.com/o/IMG_5071.jpg?alt=media&token=53fa5860-e725-40af-b0b4-d87e5aae94ae", "lat" : 150, "lon" : 100}
 

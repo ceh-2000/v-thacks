@@ -34,7 +34,6 @@ class _Camera extends State<Camera> {
   // List of Google-Vision extracted longitude and latitude
   List<double> _latitudes;
   List<double> _longitudes;
-  String _uploadedFileURL;
 
   @override
   void initState() {
