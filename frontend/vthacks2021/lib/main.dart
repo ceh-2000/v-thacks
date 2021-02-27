@@ -33,7 +33,11 @@ class Navigation extends StatefulWidget {
 class _Navigation extends State<Navigation> {
   List num_screens = [0, 1, 2];
 
-  List all_screens = [Camera(), Photo(), MapScreen()];
+  List all_screens = [
+    Camera(),
+    Photo(),
+    MapScreen(lats: [37.2743, 37.00], lons: [-76.7130, -76.00])
+  ];
   List all_screen_names = ['Camera', 'Photo', 'Map Screen'];
 
   Widget getScreenButtons(int i) {
