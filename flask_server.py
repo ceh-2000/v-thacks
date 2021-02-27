@@ -22,13 +22,12 @@ db = firestore.client()
 #Bulding the Flask API
 app = FlaskAPI(__name__)
 
+#Generic home endpoint thing
 @app.route('/', methods = ['GET'])
 def home():
     return {'hello' : 'there'}
 
 #POST request with URL and lat/lon
-#  -add to DB
-#  -return back new_entry: BOOLEAN
 @app.route('/', methods = ['POST'])
 def process_request():
     all_passed = request.data #comes in as a dictionary... expecting keys "url", "lat", "lon"
@@ -92,13 +91,13 @@ def process_request():
         all_longs = []
     # new_time = datetime.now()
 
-    all_lats.append(new_lat)
-    all_longs.append(new_long)
+    all_lats.append(all_passed['lat'])
+    all_longs.append(all_passed['lon'])
     # all_times.append(new_time)
 
     #  updating records in DB
     doc_ref = db.collection(u'dollars').document(serial)
-    doc_ref.set({'latitudes' : all_lats, 'longitudes' : all_longs)
+    doc_ref.set({'latitudes' : all_lats, 'longitudes' : all_longs})
 
     return {'status' : 'GOOD', 'firstTime' : new_serial, 'serial' : serial}
 
