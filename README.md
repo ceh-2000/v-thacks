@@ -11,3 +11,4 @@
 - Adding custom markers to Google Maps with Flutter: https://medium.com/flutter-community/ad-custom-marker-images-for-your-google-maps-in-flutter-68ce627107fc
 - Get the user's location: https://medium.com/swlh/working-with-geolocation-and-geocoding-in-flutter-and-integration-with-maps-16fb0bc35ede
 - Setting custom Google Maps style with Flutter: https://medium.com/flutter-community/ad-custom-marker-images-for-your-google-maps-in-flutter-68ce627107fc
+- Fix problem with camera stretch: https://stackoverflow.com/questions/49946153/flutter-camera-appears-stretched
