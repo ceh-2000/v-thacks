@@ -8,3 +8,5 @@
 - Firebase hosting redirects to cloud container: https://firebase.google.com/docs/hosting/cloud-run
 - Display HTML from text in Flutter: https://stackoverflow.com/questions/53831312/how-to-render-a-local-html-file-with-flutter-dart-webview
 - Display Google Maps with Flutter: https://www.raywenderlich.com/4466319-google-maps-for-flutter-tutorial-getting-started
+- Adding custom markers to Google Maps with Flutter: https://medium.com/flutter-community/ad-custom-marker-images-for-your-google-maps-in-flutter-68ce627107fc
+- 
