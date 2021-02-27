@@ -108,7 +108,7 @@ def process_request():
     doc_ref = db.collection(u'dollars').document(serial)
     doc_ref.set({'latitudes' : all_lats, 'longitudes' : all_longs})
 
-    return {'status' : 'GOOD', 'firstTime' : new_serial, 'serial' : serial}
+    return {'status' : 'GOOD', 'firstTime' : new_serial, 'serial' : serial, 'latitudes' : all_lats, 'longitudes' : all_longs}
 
 def format_server_time():
   server_time = time.localtime()
