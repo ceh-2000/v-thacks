@@ -22,6 +22,10 @@ from firebase_admin import storage
 
 from datetime import datetime
 
+#Utility function - from StackOverflow!
+def strNumbers(s):
+    return sum([char.isdigit() for char in s])
+
 #Pulling in vision credentials
 with open('api_key.txt', 'r') as f:
     key = f.read().strip()
@@ -74,6 +78,7 @@ def process_request():
                 'dollars', 'dollar', 'this', 'legal', 'is', 'tender', 'for', 'all', 'debts', 'public', 'and', 'private', 'system', 'bank',
                 'five', 'one', 'ten', 'hundred', 'thousand', 'steven']
     potential_serials = [w for w in right_length if not w.lower() in en_words]
+    potential_serials = [ser for ser in potential_serials if strNumbers(ser) >= 2]
 
     serial = None
     try:
