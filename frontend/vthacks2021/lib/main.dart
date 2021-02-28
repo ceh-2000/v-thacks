@@ -45,7 +45,7 @@ class _Navigation extends State<Navigation> {
   List all_screens = [
     Camera(),
     Photo(),
-    MapScreen(lats: [37.2743, 37.00], lons: [-76.7130, -76.00])
+    MapScreen(lats: ['37.2743', '37.00'], lons: ['-76.7130', '-76.00'])
   ];
   List all_screen_names = ['Camera', 'Photo', 'Map Screen'];
 

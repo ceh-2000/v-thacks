@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,8 @@ import 'package:camera/camera.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'package:vthacks2021/MapScreen.dart';
 
 import 'Photo.dart';
 import 'main.dart';
@@ -32,8 +35,8 @@ class _Camera extends State<Camera> {
   CameraController _controller;
 
   // List of Google-Vision extracted longitude and latitude
-  List<double> _latitudes;
-  List<double> _longitudes;
+  List<String> _latitudes;
+  List<String> _longitudes;
 
   @override
   void initState() {
@@ -81,7 +84,6 @@ class _Camera extends State<Camera> {
         .toString();
 
     String formattedDateTime = dateTime.replaceAll(' ', '');
-    print("Formatted: $formattedDateTime");
 
     final Directory appDocDir = await getApplicationDocumentsDirectory();
     final String visionDir = '${appDocDir.path}/Photos/Vision-Images';
@@ -114,10 +116,8 @@ class _Camera extends State<Camera> {
 
     String formattedDateTime = dateTime.replaceAll(' ', '');
 
-    String newPath = formattedDateTime+'.jpg';
+    String newPath = formattedDateTime + '.jpg';
     String imageUrl;
-
-    print('I made it here');
 
     Reference firebaseStorageRef =
         FirebaseStorage.instance.ref().child('$newPath');
@@ -131,10 +131,39 @@ class _Camera extends State<Camera> {
     return imageUrl;
   }
 
-  Future<void> _getVisionInfoFromBill(image_url) {
+  Future<void> _getVisionInfoFromBill(image_url) async {
     // Get the latitudes and longitudes and store in _latitudes and _longitudes
     // Use a post request and pass the location and latitude and longitude
-    print('HELLO '+image_url);
+    String bodyOfUrl = """
+    {"url" : "${image_url}", 
+    "lat" : ${_locationData.latitude}, 
+    "lon" : ${_locationData.longitude}}""";
+
+    String flaskEndpoint = "https://vthacks2021.firebaseapp.com/";
+    // Our other post request goes here
+    http.Response resFlask = await http.post(flaskEndpoint,
+        headers: {"Content-Type": "application/json"}, body: bodyOfUrl);
+
+    var responseData = resFlask.body.toString();
+
+    // To get content from a list returned with JSON we have to map the data
+    print(responseData);
+    _latitudes = responseData
+        .split('[')
+        .elementAt(1)
+        .split(']')
+        .elementAt(0)
+        .split(', ');
+    _longitudes = responseData
+        .split('[')
+        .elementAt(2)
+        .split(']')
+        .elementAt(0)
+        .split(', ');
+
+    // RegExp exp = new RegExp(r"\[(.+)\]");
+    // Iterable<RegExpMatch> matches = exp.allMatches(responseData);
+    // print(matches.toString());
   }
 
   // Helper methods for location
@@ -156,9 +185,6 @@ class _Camera extends State<Camera> {
     }
 
     _locationData = await _location.getLocation();
-    print(_locationData.latitude.toString() +
-        ' ' +
-        _locationData.longitude.toString());
   }
 
   // Adjust our CameraPreview for the ratio of our screen size
@@ -210,12 +236,15 @@ class _Camera extends State<Camera> {
                         await _takePicture().then((String path) async {
                           if (path != null) {
                             String url = await _uploadImage(path);
-                            _getVisionInfoFromBill(url);
+                            await _getVisionInfoFromBill(url);
+                            print(_latitudes);
+                            print(_longitudes);
 
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => Photo(),
+                                builder: (context) => MapScreen(
+                                    lats: _latitudes, lons: _longitudes, curLat: _locationData.latitude, curLon: _locationData.longitude),
                               ),
                             );
                           }
