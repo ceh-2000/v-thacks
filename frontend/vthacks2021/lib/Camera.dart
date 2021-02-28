@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +10,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:vthacks2021/MapScreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'Photo.dart';
 import 'main.dart';
 
 class Camera extends StatefulWidget {
@@ -23,6 +22,10 @@ class Camera extends StatefulWidget {
 }
 
 class _Camera extends State<Camera> {
+  final Color backgroundColor = Color.fromRGBO(235, 237, 238, 1.0);
+  final Color accentColor = Color.fromRGBO(207, 220, 240, 1.0);
+  final Color textColor = Color.fromRGBO(62, 63, 59, 1.0);
+
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
   // Variable to get the user's location
@@ -33,6 +36,7 @@ class _Camera extends State<Camera> {
 
   // Local variables to take photo
   CameraController _controller;
+  bool _loaded;
 
   // List of Google-Vision extracted longitude and latitude
   List<String> _latitudes;
@@ -49,6 +53,7 @@ class _Camera extends State<Camera> {
       }
       setState(() {});
     });
+    _loaded = true;
 
     getLocationOfUser();
 
@@ -103,6 +108,12 @@ class _Camera extends State<Camera> {
       return null;
     }
     return imagePath;
+  }
+
+  void _updateLoaded(bool isLoaded) {
+    setState(() {
+      _loaded = isLoaded;
+    });
   }
 
   Future<String> _uploadImage(String path) async {
@@ -213,54 +224,67 @@ class _Camera extends State<Camera> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _controller.value.isInitialized
-          ? Stack(
-              children: <Widget>[
-                _cameraWidget(context),
-                Padding(
-                  padding: const EdgeInsets.all(50.0),
-                  child: Container(
-                    alignment: Alignment.bottomCenter,
-                    child: RaisedButton.icon(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      color: Colors.teal[100],
-                      icon: Icon(
-                        Icons.camera,
-                        color: Colors.teal,
-                        size: 60.0,
-                      ),
-                      label: Text("Click", style: TextStyle(fontSize: 60)),
-                      onPressed: () async {
-                        await _takePicture().then((String path) async {
-                          if (path != null) {
-                            String url = await _uploadImage(path);
-                            await _getVisionInfoFromBill(url);
-                            print(_latitudes);
-                            print(_longitudes);
-
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => MapScreen(
-                                    lats: _latitudes, lons: _longitudes, curLat: _locationData.latitude, curLon: _locationData.longitude),
+    return _loaded
+        ? Scaffold(
+            body: _controller.value.isInitialized
+                ? Stack(
+                    children: <Widget>[
+                      _cameraWidget(context),
+                      Padding(
+                        padding: const EdgeInsets.all(50.0),
+                        child: Container(
+                          alignment: Alignment.bottomCenter,
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: accentColor,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 5),
                               ),
-                            );
-                          }
-                        });
-                      },
+                              onPressed: () async {
+                                _updateLoaded(false);
+                                await _takePicture().then((String path) async {
+                                  if (path != null) {
+                                    String url = await _uploadImage(path);
+                                    await _getVisionInfoFromBill(url);
+                                    print(_latitudes);
+                                    print(_longitudes);
+
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => MapScreen(
+                                            lats: _latitudes,
+                                            lons: _longitudes,
+                                            curLat: _locationData.latitude,
+                                            curLon: _locationData.longitude),
+                                      ),
+                                    );
+                                  }
+                                });
+                              },
+                              child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Icon(Icons.camera_alt, size: 50.0),
+                                  ])),
+                        ),
+                      )
+                    ],
+                  )
+                : Container(
+                    color: Colors.teal,
+                    child: Center(
+                      child: CircularProgressIndicator(),
                     ),
                   ),
-                )
-              ],
-            )
-          : Container(
-              color: Colors.teal,
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
-            ),
-    );
+          )
+        : Scaffold(
+            backgroundColor: backgroundColor,
+            body: Center(
+                child: SizedBox(
+              child: CircularProgressIndicator(),
+              height: 100.0,
+              width: 100.0,
+            )));
   }
 }

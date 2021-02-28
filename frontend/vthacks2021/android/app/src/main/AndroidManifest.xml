@@ -6,7 +6,7 @@
         android:label="vthacks2021"
         android:icon="@mipmap/ic_launcher">
         <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAC79P8U4hYnb26xCOnJy3igjMnnxnA_-U"/>
+            android:value=""/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
