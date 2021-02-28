@@ -1,9 +1,18 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'Camera.dart';
 import 'Photo.dart';
 import 'MapScreen.dart';
 
-void main() {
+List<CameraDescription> cameras = [];
+
+Future<void> main() async {
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
+    cameras = await availableCameras();
+  } on CameraException catch (e) {
+    print(e);
+  }
   runApp(MyApp());
 }
 
@@ -33,7 +42,11 @@ class Navigation extends StatefulWidget {
 class _Navigation extends State<Navigation> {
   List num_screens = [0, 1, 2];
 
-  List all_screens = [Camera(), Photo(), MapScreen()];
+  List all_screens = [
+    Camera(),
+    Photo(),
+    MapScreen(lats: [37.2743, 37.00], lons: [-76.7130, -76.00])
+  ];
   List all_screen_names = ['Camera', 'Photo', 'Map Screen'];
 
   Widget getScreenButtons(int i) {
